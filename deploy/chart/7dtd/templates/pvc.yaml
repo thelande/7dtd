@@ -1,0 +1,34 @@
+{{- if .Values.persistentStorage.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "7dtd.fullname" . }}-gamefiles
+  labels:
+    {{- include "7dtd.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- with .Values.persistentStorage.gameFiles.className }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentStorage.gameFiles.capacity | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "7dtd.fullname" . }}-steam
+  labels:
+    {{- include "7dtd.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- with .Values.persistentStorage.steam.className }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentStorage.steam.capacity | quote }}
+{{- end }}

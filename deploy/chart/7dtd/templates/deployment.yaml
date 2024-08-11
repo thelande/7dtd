@@ -1,3 +1,4 @@
+{{- $haveSecrets := or .Values.serverConfig.server.serverPasswordSecret .Values.serverConfig.admin.telnetPasswordSecret }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,10 +9,13 @@ spec:
   selector:
     matchLabels:
       {{- include "7dtd.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -27,26 +31,66 @@ spec:
       serviceAccountName: {{ include "7dtd.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-config
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/config/mkservercfg.sh"]
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            {{- if $haveSecrets }}
+            - name: secrets
+              mountPath: /secrets
+            {{- end }}
+            - name: game-files
+              mountPath: /app/7-days-to-die
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bash", "-c", "while true; do sleep 10; done"]
           ports:
             - name: game
               containerPort: {{ .Values.gameService.port }}
               protocol: TCP
+            - name: dashboard
+              containerPort: {{ .Values.webDashboardService.port }}
+              protocol: TCP
+            - name: telnet
+              containerPort: {{ .Values.telnetService.port }}
+              protocol: TCP
+            {{- range untilStep 26900 26904 1 }}
+            - name: game-udp-{{ . }}
+              containerPort: {{ . }}
+              protocol: UDP
+            {{- end }}
+          {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.gameService.port }}
+            failureThreshold: {{ div .Values.startupDelaySeconds 10 }}
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: config
-              path: /config
+            - name: game-files
+              mountPath: /app/7-days-to-die
+            - name: steam
+              mountPath: /home/7days/.local/share/Steam
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -58,8 +102,14 @@ spec:
         - name: config
           configMap:
             name: {{ include "7dtd.fullname" . }}-config
-
-        {{- if or .Values.serverConfig.server.serverPasswordSecret .Values.serverConfig.admin.telnetPasswordSecret }}
+            defaultMode: 0550
+        - name: game-files
+          persistentVolumeClaim:
+            claimName: {{ include "7dtd.fullname" . }}-gamefiles
+        - name: steam
+          persistentVolumeClaim:
+            claimName: {{ include "7dtd.fullname" . }}-steam
+        {{- if $haveSecrets }}
         - name: secrets
           projected:
             sources:
@@ -77,7 +127,7 @@ spec:
                     - key: password
                       path: telnet/password
               {{- end }}
-        {{- end }}{{/* if or .Values.serverConfig.server.serverPasswordSecret .Values.serverConfig.admin.telnetPasswordSecret */}}
+        {{- end }}{{/* if $haveSecrets */}}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

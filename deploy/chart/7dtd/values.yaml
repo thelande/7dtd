@@ -3,8 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  #repository: thelande/7dtd
-  repository: busybox
+  repository: thelande/7dtd
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -30,6 +29,16 @@ podLabels: {}
 podSecurityContext:
   fsGroup: 1000
 
+persistentStorage:
+  enabled: false
+
+  gameFiles:
+    className: ""
+    capacity: 20Gi
+  steam:
+    className: ""
+    capacity: 500Mi
+
 securityContext: {}
   # capabilities:
   #   drop:
@@ -39,12 +48,16 @@ securityContext: {}
   # runAsUser: 1000
 
 gameService:
-  type: ClusterIP
+  type: LoadBalancer
   port: 26900
 
 webDashboardService:
   type: ClusterIP
   port: 8080
+
+telnetService:
+  type: ClusterIP
+  port: 8081
 
 ## Ingress for the admin web dashboard
 ingress:
@@ -75,8 +88,23 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-livenessProbe: {}
-readinessProbe: {}
+livenessProbe:
+  tcpSocket:
+    port: 26900
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  failureThreshold: 2
+
+readinessProbe:
+  tcpSocket:
+    port: 26900
+  initialDelaySeconds: 60
+  periodSeconds: 60
+
+# How much time, in seconds, to wait for the container to start for the first
+# time. 2700 seconds = 45 minutes. This assuming downloading the dedicated server
+# (~16GiB) on a 100Mbit connection takes ~30
+startupDelaySeconds: 2700
 
 # Additional volumes on the output Deployment definition.
 volumes: []
@@ -100,6 +128,8 @@ affinity: {}
 env: {}
 # - name: TIMEZONE
 #   value: America/Los_Angeles
+# - name: DO_VALIDATE
+#   value: 1
 
 serverConfig:
   server:
