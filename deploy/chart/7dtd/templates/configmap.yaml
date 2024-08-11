@@ -1,0 +1,191 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "7dtd.fullname" . }}-config
+  labels:
+    {{- include "7dtd.labels" . | nindent 4 }}
+data:
+  mkservercfg.sh: |
+    #!/bin/bash
+    #
+    set -e
+
+    CFG_FILE="/app/7-days-to-die/serverconfig.xml"
+    SERVER_PASSWORD=""
+    TELNET_PASSWORD=""
+
+    SERVER_PASSWORD_SECRET="{{ .Values.serverConfig.server.serverPasswordSecret }}"
+    if [[ -n "$SERVER_PASSWORD_SECRET" ]]; then
+      SERVER_PASSWORD="$(cat /secrets/server/password)"
+    fi
+
+    TELNET_PASSWORD_SECRET="{{ .Values.serverConfig.admin.telnetPasswordSecret }}"
+    if [[ -n "$TELNET_PASSWORD_SECRET" ]]; then
+      TELNET_PASSWORD="$(cat /secrets/telnet/password)"
+    fi
+
+    cat<<EOF >"$CFG_FILE"
+    <?xml version="1.0"?>
+    {{- with .Values.serverConfig }}
+    <ServerSettings>
+      <!-- GENERAL SERVER SETTINGS -->
+
+      <!-- Server representation -->
+      {{- with .server }}
+      <property name="ServerName" value="{{ .serverName }}"/>
+      <property name="ServerDescription" value="{{ .serverDescription }}"/>
+      <property name="ServerWebsiteURL" value="{{ .serverWebsiteUrl }}"/>
+      <property name="ServerPassword" value="$SERVER_PASSWORD" />
+      <property name="ServerLoginConfirmationText" value="{{ .serverLoginConfirmationText }}" />
+      <property name="Region" value="{{ .region }}" />
+      <property name="Language" value="{{ .language }}" />
+      {{- end }}
+
+      <!-- Networking -->
+      {{- with .networking }}
+      <property name="ServerPort" value="{{ .serverPort }}"/>
+      <property name="ServerVisibility" value="{{ .serverVisibility }}"/>
+      <property name="ServerDisabledNetworkProtocols"	value="{{ .serverDisabledNetworkProtocols }}"/>
+      <property name="ServerMaxWorldTransferSpeedKiBs" value="{{ .serverMaxWorldTransferSpeedKiBs }}"/>
+      {{- end }}
+
+      <!-- Slots -->
+      {{- with .slots }}
+      <property name="ServerMaxPlayerCount" value="{{ .serverMaxPlayerCount }}" />
+      <property name="ServerReservedSlots" value="{{ .serverReservedSlots }}"/>
+      <property name="ServerReservedSlotsPermission" value="{{ .serverReservedSlotsPermission }}"/>
+      <property name="ServerAdminSlots" value="{{ .serverAdminSlots }}"/>
+      <property name="ServerAdminSlotsPermission" value="{{ .serverAdminSlotsPermission }}"/>
+      {{- end }}
+
+      <!-- Admin interfaces -->
+      {{- with .admin }}
+      <property name="WebDashboardEnabled" value="{{ .webDashboardEnabled }}"/>
+      <property name="WebDashboardPort" value="{{ .webDashboardPort }}"/>
+      <property name="WebDashboardUrl" value="{{ .webDashboardUrl }}"/>
+      <property name="EnableMapRendering" value="{{ .enableMapRendering }}"/>
+
+      <property name="TelnetEnabled" value="{{ .telnetEnabled }}"/>
+      <property name="TelnetPort" value="{{ .telnetPort }}"/>
+      <property name="TelnetPassword" value="$TELNET_PASSWORD"/>
+      <property name="TelnetFailedLoginLimit" value="{{ .telnetFailedLoginLimit }}"/>
+      <property name="TelnetFailedLoginsBlocktime" value="{{ .telnetFailedLoginsBlocktime }}"/>
+
+      <property name="TerminalWindowEnabled" value="false"/>
+      {{- end }}
+
+      <!-- Folder and file locations -->
+      <property name="AdminFileName" value="serveradmin.xml"/>
+      <!-- <property name="UserDataFolder" value="absolute path" /> -->
+
+      <!-- Other technical settings -->
+      {{- with .other }}
+      <property name="EACEnabled" value="{{ .eacEnabled }}"/>
+      <property name="IgnoreEOSSanctions" value="{{ .ignoreEOSSanctions }}"/>
+      <property name="HideCommandExecutionLog" value="{{ .hideCommandExecutionLog }}"/>
+      <property name="MaxUncoveredMapChunksPerPlayer" value="{{ .maxUncoveredMapChunksPerPlayer }}"/>
+      <property name="PersistentPlayerProfiles" value="{{ .persistentPlayerProfiles }}" />
+      <property name="MaxChunkAge" value="{{ .maxChunkAge }}"/>
+      <property name="SaveDataLimit" value="{{ .saveDataLimit }}"/>
+      {{- end }}
+
+      <!-- GAMEPLAY -->
+      {{- with .gameplay }}
+
+      <!-- World -->
+      {{- with .world }}
+      <property name="GameWorld" value="{{ .gameWorld }}"/>
+      <property name="WorldGenSeed" value="{{ .worldGenSeed }}"/>
+      <property name="WorldGenSize" value="{[ .worldGenSize ]}"/>
+      <property name="GameName" value="{{ .gameName }}"/>
+      <property name="GameMode" value="{{ .gameMode }}"/>
+      {{- end }}
+
+      <!-- Difficulty -->
+      {{- with .difficulty }}
+      <property name="GameDifficulty" value="{{ .gameDifficulty }}"/>
+      <property name="BlockDamagePlayer" value="{{ .blockDamagePlayer }}" />
+      <property name="BlockDamageAI" value="{{ .blockDamageAI }}" />
+      <property name="BlockDamageAIBM" value="{{ .blockDamageAIBM }}" />
+      <property name="XPMultiplier" value="{{ .xpMultiplier }}" />
+      <property name="PlayerSafeZoneLevel" value="{{ .playerSafeZoneLevel }}" />
+      <property name="PlayerSafeZoneHours" value="{{ .playerSafeZoneHours }}" />
+      {{- end }}
+
+      <!-- Misc. -->
+      {{- with .misc }}
+      <property name="BuildCreate" value="{{ .buildCreate }}" />
+      <property name="DayNightLength" value="{{ .dayNightLength }}" />
+      <property name="DayLightLength" value="{{ .dayLightLength }}" />
+      <property name="DeathPenalty" value="{{ .deathPenalty }}" />
+      <property name="DropOnDeath" value="{{ .dropOnDeath }}" />
+      <property name="DropOnQuit" value="{{ .dropOnQuit }}" />
+      <property name="BedrollDeadZoneSize" value="{{ .bedrollDeadZoneSize }}" />
+      <property name="BedrollExpiryTime" value="{{ .bedrollExpiryTime }}" />
+
+      <property name="DynamicMeshEnabled" value="{{ .dynamicMeshEnabled }}"/>
+      <property name="DynamicMeshLandClaimOnly" value="{{ .dynamicMeshLandClaimOnly }}"/>
+      <property name="DynamicMeshLandClaimBuffer" value="{{ .dynamicMeshLandClaimBuffer }}"/>
+      <property name="DynamicMeshMaxItemCache" value="{{ .dynamicMeshMaxItemCache }}"/>
+
+      <property name="TwitchServerPermission" value="{{ .twitchServerPermission }}"/>
+      <property name="TwitchBloodMoonAllowed" value="{{ .twitchBloodMoonAllowed }}"/>
+
+      <property name="QuestProgressionDailyLimit" value="{{ .questProgressionDailyLimit }}"/>
+      {{- end }}
+
+      <!-- Performance related -->
+      {{- with .performance }}
+      <property name="MaxSpawnedZombies" value="{{ .maxSpawnedZombies }}" />
+      <property name="MaxSpawnedAnimals" value="{{ .maxSpawnedAnimals }}" />
+      <property name="ServerMaxAllowedViewDistance" value="{{ .serverMaxAllowedViewDistance }}" />
+      <property name="MaxQueuedMeshLayers" value="{{ .maxQueuedMeshLayers }}" />
+      {{- end }}
+
+      <!-- Zombie settings -->
+      {{- with .zombie }}
+      <property name="EnemySpawnMode" value="{{ .enemySpawnMode }}" />
+      <property name="EnemyDifficulty" value="{{ .enemyDifficulty }}" />
+      <property name="ZombieFeralSense" value="{{ .zombieFeralSense }}" />
+      <property name="ZombieMove" value="{{ .zombieMove }}" />
+      <property name="ZombieMoveNight" value="{{ .zombieMoveNight }}" />
+      <property name="ZombieFeralMove" value="{{ .zombieFeralMove }}" />
+      <property name="ZombieBMMove" value="{{ .zombieBMMove }}" />
+      <property name="BloodMoonFrequency" value="{{ .bloodMoonFrequency }}" />
+      <property name="BloodMoonRange" value="{{ .bloodMoonRange }}" />
+      <property name="BloodMoonWarning" value="{{ .bloodMoonWarning }}" />
+      <property name="BloodMoonEnemyCount" value="{{ .bloodMoonEnemyCount }}" />
+      {{- end }}
+
+      <!-- Loot -->
+      {{- with .loot }}
+      <property name="LootAbundance" value="{{ .lootAbundance }}" />
+      <property name="LootRespawnDays" value="{{ .lootRespawnDays }}" />
+      <property name="AirDropFrequency" value="{{ .airDropFrequency }}"/>
+      <property name="AirDropMarker" value="{{ .airDropMarker }}"/>
+      {{- end }}
+
+      <!-- Multiplayer -->
+      {{- with .multiplayer }}
+      <property name="PartySharedKillRange" value="{{ .partySharedKillRange }}"/>
+      <property name="PlayerKillingMode" value="{{ .playerKillingMode }}" />
+      {{- end }}
+
+      <!-- Land claim options -->
+      {{- with .landClaim }}
+      <property name="LandClaimCount" value="{{ .landClaimCount }}"/>
+      <property name="LandClaimSize" value="{{ .landClaimSize }}"/>
+      <property name="LandClaimDeadZone" value="{{ .landClaimDeadZone }}"/>
+      <property name="LandClaimExpiryTime" value="{{ .landClaimExpiryTime }}"/>
+      <property name="LandClaimDecayMode" value="{{ .landClaimDecayMode }}"/>
+      <property name="LandClaimOnlineDurabilityModifier" value="{{ .landClaimOnlineDurabilityModifier }}"/>
+      <property name="LandClaimOfflineDurabilityModifier" value="{{ .landClaimOfflineDurabilityModifier }}"/>
+      <property name="LandClaimOfflineDelay" value="{{ .landClaimOfflineDelay }}"/>
+      {{- end }}
+      {{- end }}{{/* with .gameplay */}}
+    </ServerSettings>
+    {{- end }}{{/* with .Values.serverConfig */}}
+    EOF
+
+    echo "Wrote $CFG_FILE"
+    exit 0
