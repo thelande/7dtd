@@ -29,4 +29,5 @@ COPY --chmod=0755 entrypoint.sh start-server.sh /
 VOLUME [ "/app/7-days-to-die", "/home/7days/.local/share/Steam" ]
 EXPOSE 26900/tcp 26900-26903/udp 8080-8081/tcp
 
+STOPSIGNAL SIGINT
 ENTRYPOINT [ "/entrypoint.sh" ]
