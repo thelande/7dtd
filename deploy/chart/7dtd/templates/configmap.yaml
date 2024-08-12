@@ -13,7 +13,8 @@ data:
     set -e
 
     CFG_FILE="/app/world/Saves/serveradmin.xml"
-    mkdir -p "$(dirname "$CFG_FILE")"
+    CFG_DIR="$(dirname "$CFG_FILE")"
+    mkdir -p "$CFG_DIR"
 
     cat<<EOF >"$CFG_FILE"
     <?xml version="1.0" encoding="UTF-8"?>
@@ -120,6 +121,7 @@ data:
     EOF
 
     echo "Wrote $CFG_FILE"
+    chown -R 7days:7days "$CFG_DIR"
 
   mkservercfg.sh: |
     #!/bin/bash
