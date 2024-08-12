@@ -136,21 +136,6 @@ env: {}
 # - name: DO_VALIDATE
 #   value: 1
 
-adminConfig:
-  ## List of users and their administrator level. User Steam 64 IDs may be found
-  ## at https://steamid.co/
-  ##
-  ##
-  administrators: []
-  # - steamID: 1234...
-  #   name: ""
-  #   permissionLevel: 0
-
-  ## List of moderators and their moderator level.
-  moderators: []
-  # - steamID: 1234...
-  #   permissionLevel: 0
-
 userConfig:
   ## List of users and permissions.
   ##
@@ -166,7 +151,7 @@ userConfig:
   ## Users not given a permission level in this file will have a default permission level of 1000!
   users: []
   # - name: John Smith
-  #   steamID: 1234...
+  #   steamID: '1234...'
   #   permissionLevel: 100
 
   ## List of groups and permissions.
@@ -182,7 +167,7 @@ userConfig:
   ## And see that the groupID64 is 103582791434672565.
   groups: []
   # - name: Steam Universe
-  #   steamID: 1234...
+  #   steamID: '1234...'
   #   permissionLevelDefault: 1000
   #   permissionLevelMod: 0
 
@@ -193,16 +178,16 @@ userConfig:
   ## and admins, will be permitted to log in.
   whitelistUsers: []
   # - name: John Smith
-  #   steamID: 1234...
+  #   steamID: '1234...'
 
   whitelistGroups: []
   # - name: Steam Universe
-  #   steamID: 1234...
+  #   steamID: '1234...'
 
   ## List of users banned from the server.
   blacklist: []
   # - name: John Smith
-  #   steamID: 1234...
+  #   steamID: '1234...'
   #   unbanDate:
   #   reason: Griefer
 
