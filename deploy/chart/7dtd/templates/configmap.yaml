@@ -216,7 +216,7 @@ data:
       {{- with .world }}
       <property name="GameWorld" value="{{ .gameWorld }}"/>
       <property name="WorldGenSeed" value="{{ .worldGenSeed }}"/>
-      <property name="WorldGenSize" value="{[ .worldGenSize ]}"/>
+      <property name="WorldGenSize" value="{[ .worldGenSize }}"/>
       <property name="GameName" value="{{ .gameName }}"/>
       <property name="GameMode" value="{{ .gameMode }}"/>
       {{- end }}
