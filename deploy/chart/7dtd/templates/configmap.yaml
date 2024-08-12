@@ -68,7 +68,7 @@ data:
       <!-- Name in any entries is optional for display purposes only -->
       <users>
         {{- range .users }}
-        <user platform="Steam" userid="{{ .steamID }}" name="{{ .name }}" permissions_level="{{ .permissionLevel }}" />
+        <user platform="Steam" userid="{{ .steamID }}" name="{{ .name }}" permission_level="{{ .permissionLevel }}" />
         {{- end }}
         {{- range .groups }}
         <group steamID="{{ .steamID }}" name="{{ .name }}" permission_level_default="{{ .permissionLevelDefault }}" permission_level_mod="{{ .permissionLevelMod }}" />
