@@ -196,7 +196,7 @@ data:
 
       <!-- Folder and file locations -->
       <property name="AdminFileName" value="serveradmin.xml"/>
-      <property name="UserDataFolder" value="/app/world" />
+      <property name="UserDataFolder" value="/app/7-days-to-die/UserData" />
 
       <!-- Other technical settings -->
       {{- with .other }}

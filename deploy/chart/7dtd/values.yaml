@@ -36,10 +36,6 @@ persistentStorage:
     className: ""
     capacity: 20Gi
 
-  world:
-    className: ""
-    capacity: 5Gi
-
   steam:
     className: ""
     capacity: 500Mi
