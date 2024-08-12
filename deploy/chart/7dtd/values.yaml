@@ -32,10 +32,13 @@ podSecurityContext:
 persistentStorage:
   enabled: false
 
+  ## Storage for the dedicated server files and the world. The dedicated server
+  ## takes about 12GiB on its own.
   gameFiles:
     className: ""
     capacity: 20Gi
 
+  ## Storage for Steam's files.
   steam:
     className: ""
     capacity: 500Mi
