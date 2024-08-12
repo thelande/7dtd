@@ -13,6 +13,7 @@ data:
     set -e
 
     CFG_FILE="/app/world/Saves/serveradmin.xml"
+    mkdir -p "$(dirname "$CFG_FILE")"
 
     cat<<EOF >"$CFG_FILE"
     <?xml version="1.0" encoding="UTF-8"?>
