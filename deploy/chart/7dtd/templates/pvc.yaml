@@ -21,6 +21,24 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: {{ include "7dtd.fullname" . }}-world
+  labels:
+    {{- include "7dtd.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- with .Values.persistentStorage.world.className }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentStorage.world.capacity | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: {{ include "7dtd.fullname" . }}-steam
   labels:
     {{- include "7dtd.labels" . | nindent 4 }}

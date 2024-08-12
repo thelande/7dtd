@@ -35,6 +35,11 @@ persistentStorage:
   gameFiles:
     className: ""
     capacity: 20Gi
+
+  world:
+    className: ""
+    capacity: 5Gi
+
   steam:
     className: ""
     capacity: 500Mi
@@ -130,6 +135,80 @@ env: {}
 #   value: America/Los_Angeles
 # - name: DO_VALIDATE
 #   value: 1
+
+adminConfig:
+  ## List of users and their administrator level. User Steam 64 IDs may be found
+  ## at https://steamid.co/
+  ##
+  ##
+  administrators: []
+  # - steamID: 1234...
+  #   name: ""
+  #   permissionLevel: 0
+
+  ## List of moderators and their moderator level.
+  moderators: []
+  # - steamID: 1234...
+  #   permissionLevel: 0
+
+userConfig:
+  ## List of users and permissions.
+  ##
+  ## You can find the SteamID64 of any user with one of the following pages:
+  ## https://steamdb.info/calculator/, https://steamid.io/lookup, http://steamid.co/
+  ## http://steamid.co/ instructions:
+  ## Input the player's name in the search field. example: Kinyajuu
+  ## If the name doesn't work, you can also use the url of their steam page.
+  ## Also you may add/remove admins, mods, whitelist, blacklist using in game commands.
+  ## You will want the STEAM64ID. example: 76561198021925107
+  ##
+  ## Permission level: 0-1000, a user may run any command equal to or above their permission level.
+  ## Users not given a permission level in this file will have a default permission level of 1000!
+  users: []
+  # - name: John Smith
+  #   steamID: 1234...
+  #   permissionLevel: 100
+
+  ## List of groups and permissions.
+  ##
+  ## You can find the SteamID64 of any group by taking its address and adding
+  ##   /memberslistxml/?xml=1
+  ## to the end. You will get the XML information of the group which should have an entry
+  ## memberList->groupID64.
+  ## Example: The 'Steam Universe' group has the address
+  ##   https://steamcommunity.com/groups/steamuniverse
+  ## So you point your browser to
+  ##   https://steamcommunity.com/groups/steamuniverse/memberslistxml/?xml=1
+  ## And see that the groupID64 is 103582791434672565.
+  groups: []
+  # - name: Steam Universe
+  #   steamID: 1234...
+  #   permissionLevelDefault: 1000
+  #   permissionLevelMod: 0
+
+  ## Users allowed to login to the server.
+  ##
+  ## When empty, any users will be allowed to login (assuming there is no password or
+  ## the users know the password). When not empty, only users listed in the whitelist,
+  ## and admins, will be permitted to log in.
+  whitelistUsers: []
+  # - name: John Smith
+  #   steamID: 1234...
+
+  whitelistGroups: []
+  # - name: Steam Universe
+  #   steamID: 1234...
+
+  ## List of users banned from the server.
+  blacklist: []
+  # - name: John Smith
+  #   steamID: 1234...
+  #   unbanDate:
+  #   reason: Griefer
+
+  commands: []
+
+  # TODO: API tokens
 
 serverConfig:
   server:

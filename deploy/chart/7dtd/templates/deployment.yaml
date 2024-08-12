@@ -47,6 +47,8 @@ spec:
             {{- end }}
             - name: game-files
               mountPath: /app/7-days-to-die
+            - name: world
+              mountPath: /app/world
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -89,6 +91,8 @@ spec:
           volumeMounts:
             - name: game-files
               mountPath: /app/7-days-to-die
+            - name: world
+              mountPath: /app/world
             - name: steam
               mountPath: /home/7days/.local/share/Steam
           {{- with .Values.volumeMounts }}
@@ -106,6 +110,9 @@ spec:
         - name: game-files
           persistentVolumeClaim:
             claimName: {{ include "7dtd.fullname" . }}-gamefiles
+        - name: world
+          persistentVolumeClaim:
+            claimName: {{ include "7dtd.fullname" . }}-world
         - name: steam
           persistentVolumeClaim:
             claimName: {{ include "7dtd.fullname" . }}-steam
