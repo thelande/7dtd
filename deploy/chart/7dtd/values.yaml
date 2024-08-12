@@ -349,7 +349,7 @@ serverConfig:
       ## seed thus also creating a unique map name even if using the same WorldGenSeed.
       ## Has to be between 2048 and 16384, though large map sizes will take long to
       ## generate / download / load
-      worldGenSize: 4096
+      worldGenSize: 6144
 
       ## Whatever you want the game name to be. This affects the save game name
       ## as well as the seed used when placing decoration (trees etc) in the world.
