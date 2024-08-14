@@ -14,7 +14,7 @@ ln -sf /usr/share/zone/$TIMEZONE /etc/localtime
 echo "$TIMEZONE" > /etc/timezone
 
 echo "Installing/updating 7 Days to Die Dedicated Server"
-STEAMCMD_OPTS=(+login anonymous +force_install_dir "$INSTALL_DIR" +app_update $APP_ID)
+STEAMCMD_OPTS=(+force_install_dir "$INSTALL_DIR" +login anonymous +app_update $APP_ID)
 [[ -n "$DO_VALIDATE" && $DO_VALIDATE -eq 1 ]] && STEAMCMD_OPTS+=(validate)
 STEAMCMD_OPTS+=(+quit)
 
