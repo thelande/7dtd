@@ -52,7 +52,7 @@ securityContext: {}
   # runAsUser: 1000
 
 gameService:
-  type: LoadBalancer
+  type: ClusterIP
   port: 26900
 
 webDashboardService:
@@ -241,7 +241,7 @@ serverConfig:
     ## or when port-forwarding is set up correctly. LiteNetLib should only be disabled
     ## for temporary troubleshooting as doing so will greatly degrade network
     ## optimization in the server client.
-    serverDisabledNetworkProtocols: SteamNetworking
+    serverDisabledNetworkProtocols: ""
 
     ## Maximum (!) speed in kiB/s the world is transferred at to a client on first
     ## connect if it does not have the world yet. Maximum is about 1300 kiB/s, even
