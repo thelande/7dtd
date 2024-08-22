@@ -64,6 +64,11 @@ SDTD_BACKUP_FREQ="${SDTD_BACKUP_FREQ:-30}"
 SDTD_MAX_BACKUPS="${SDTD_MAX_BACKUPS:-48}"
 [[ "$SDTD_MAX_BACKUPS" -gt 0 ]] || { error "SDTD_MAX_BACKUPS must be positive"; }
 
+echo "Setting timezone to $TIMEZONE"
+[[ -f /etc/localtime ]] && rm /etc/localtime
+ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+echo "$TIMEZONE" > /etc/timezone
+
 info "SDTD_BACKUP_PATH=$SDTD_BACKUP_PATH"
 info "SDTD_BACKUP_FREQ=$SDTD_BACKUP_FREQ"
 info "SDTD_MAX_BACKUPS=$SDTD_MAX_BACKUPS"
