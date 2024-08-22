@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   7dtd:
   - apiVersion: v2
+    appVersion: 0.4.2
+    created: "2024-08-22T17:00:44.910657966Z"
+    description: A Helm chart to deploy the 7 Days to Die Dedicated Server
+    digest: e6986befc19b3bae2d67aed8d26a492d19982ab39d53cea118532ddf3021cc64
+    name: 7dtd
+    type: application
+    urls:
+    - https://github.com/thelande/7dtd/releases/download/7dtd-0.4.2/7dtd-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
     appVersion: 0.4.1
     created: "2024-08-22T16:53:49.002873474Z"
     description: A Helm chart to deploy the 7 Days to Die Dedicated Server
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/thelande/7dtd/releases/download/7dtd-0.1.0/7dtd-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-22T16:53:49.002882872Z"
+generated: "2024-08-22T17:00:44.910670179Z"
