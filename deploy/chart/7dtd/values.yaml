@@ -107,7 +107,7 @@ readinessProbe:
 
 # How much time, in seconds, to wait for the container to start for the first
 # time. 2700 seconds = 45 minutes. This assuming downloading the dedicated server
-# (~16GiB) on a 100Mbit connection takes ~30
+# (~16GiB) on a 100Mbit connection takes ~30 minutes.
 startupDelaySeconds: 2700
 
 # Additional volumes on the output Deployment definition.
