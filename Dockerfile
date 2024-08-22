@@ -18,6 +18,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         ca-certificates \
         tzdata \
         procps \
+        rsync \
     ; \
     apt-get autoclean
 
@@ -25,7 +26,7 @@ RUN set -eux; \
     groupadd -g 1000 7days; \
     useradd -m -u 1000 -g 7days -s /bin/bash 7days
 
-COPY --chmod=0755 entrypoint.sh start-server.sh stop-server.sh /
+COPY --chmod=0755 entrypoint.sh start-server.sh stop-server.sh backup-saves.sh /
 
 VOLUME [ "/app/7-days-to-die", "/home/7days/.local/share/Steam" ]
 EXPOSE 26900/tcp 26900-26903/udp 8080-8081/tcp

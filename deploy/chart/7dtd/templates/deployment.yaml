@@ -102,6 +102,26 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- if .Values.backups.enabled }}
+        - name: backups
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/backup-saves.sh"]
+          env:
+            - name: SDTD_BACKUP_PATH
+              value: /app/backups
+            - name: SDTD_BACKUP_FREQ
+              value: {{ .Values.backups.frequency | quote }}
+            - name: SDTD_MAX_BACKUPS
+              value: {{ .Values.backups.maxBackups | quote }}
+          volumeMounts:
+            - name: game-files
+              mountPath: /app/7-days-to-die
+            - name: backups
+              mountPath: /app/backups
+        {{- end }}
       volumes:
         - name: config
           configMap:
@@ -113,6 +133,11 @@ spec:
         - name: steam
           persistentVolumeClaim:
             claimName: {{ include "7dtd.fullname" . }}-steam
+        {{- if .Values.backups.enabled }}
+        - name: backups
+          persistentVolumeClaim:
+            claimName: {{ include "7dtd.fullname" . }}-backups
+        {{- end }}
         {{- if $haveSecrets }}
         - name: secrets
           projected:
