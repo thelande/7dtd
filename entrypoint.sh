@@ -10,7 +10,7 @@ chown -R 7days:7days "$INSTALL_DIR"
 
 echo "Setting timezone to $TIMEZONE"
 [[ -f /etc/localtime ]] && rm /etc/localtime
-ln -sf /usr/share/zone/$TIMEZONE /etc/localtime
+ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 echo "$TIMEZONE" > /etc/timezone
 
 echo "Installing/updating 7 Days to Die Dedicated Server"
