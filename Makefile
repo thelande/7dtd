@@ -1,6 +1,6 @@
 IMAGE_REPOSITORY=thelande
 IMAGE_NAME=7dtd
-IMAGE_TAG=0.4.0
+IMAGE_TAG=0.4.1
 
 all::
 
