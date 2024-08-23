@@ -152,6 +152,20 @@ backups:
   ## The maximum number of backups to keep.
   maxBackups: 48
 
+exporter:
+  enabled: false
+
+  # apiUrl: ""
+
+  # auth:
+  #   tokenName: ""
+  #   tokenSecret: ""
+  #   existingSecret: ""
+
+  # serviceMonitor:
+  #   enabled: false
+  #   scrapeInterval: 30s
+
 userConfig:
   ## List of users and permissions.
   ##
