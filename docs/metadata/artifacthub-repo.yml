@@ -10,6 +10,6 @@
 # NOT apply to ownership claim operations, which are processed immediately.
 #
 repositoryID: f5b64fd6-3490-42a4-8b8e-3573b9af8e0e
-owners: # (optional, used to claim repository ownership)
+owners:
   - name: Tom Helander
     email: thomas.helander@gmail.com
