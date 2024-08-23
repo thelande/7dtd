@@ -105,9 +105,9 @@ function cleanup_backups {
         return
     fi
 
-    OLDEST="$(find /backups -type f -printf '%T+ %p\n' | sort | head -n 1 | awk '{ print $NF }')"
+    OLDEST="$(find "$SDTD_BACKUP_PATH" -type f -printf '%T+ %p\n' | sort | head -n 1 | awk '{ print $NF }')"
     warning "Maximum number of backups reached; deleting oldest: $OLDEST"
-    # rm -f "$OLDEST"
+    rm -f "$OLDEST"
 }
 
 function do_backup {
