@@ -152,7 +152,7 @@ backups:
   ## The maximum number of backups to keep.
   maxBackups: 48
 
-exporter:
+sdtd-exporter:
   enabled: false
 
   # apiUrl: ""
