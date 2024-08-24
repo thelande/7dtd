@@ -13,13 +13,15 @@ echo "Setting timezone to $TIMEZONE"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 echo "$TIMEZONE" > /etc/timezone
 
-echo "Installing/updating 7 Days to Die Dedicated Server"
-STEAMCMD_OPTS=(+force_install_dir "$INSTALL_DIR" +login anonymous +app_update $APP_ID)
-[[ -n "$DO_VALIDATE" && $DO_VALIDATE -eq 1 ]] && STEAMCMD_OPTS+=(validate)
-STEAMCMD_OPTS+=(+quit)
+if [[ -n "$SKIP_UPDATE" && $SKIP_UPDATE -ne 1 ]]; then
+    echo "Installing/updating 7 Days to Die Dedicated Server"
+    STEAMCMD_OPTS=(+force_install_dir "$INSTALL_DIR" +login anonymous +app_update $APP_ID)
+    [[ -n "$DO_VALIDATE" && $DO_VALIDATE -eq 1 ]] && STEAMCMD_OPTS+=(validate)
+    STEAMCMD_OPTS+=(+quit)
 
-chown -R 7days:7days /home/7days
-runuser -l 7days steamcmd "${STEAMCMD_OPTS[@]}"
+    chown -R 7days:7days /home/7days
+    runuser -l 7days steamcmd "${STEAMCMD_OPTS[@]}"
+fi
 
 echo "Starting dedicated server"
 cd "$INSTALL_DIR"
