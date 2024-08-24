@@ -2,6 +2,21 @@ apiVersion: v1
 entries:
   7dtd:
   - apiVersion: v2
+    appVersion: 0.4.7
+    created: "2024-08-24T17:00:07.239875056Z"
+    dependencies:
+    - condition: sdtd-exporter.enabled
+      name: sdtd-exporter
+      repository: https://thelande.github.io/charts
+      version: 0.1.0
+    description: A Helm chart to deploy the 7 Days to Die Dedicated Server
+    digest: 90e393668cd3d5fd7199533597bb046d1d4fefffd2366ff4b04df8ca6123fd6f
+    name: 7dtd
+    type: application
+    urls:
+    - https://github.com/thelande/7dtd/releases/download/7dtd-0.5.3/7dtd-0.5.3.tgz
+    version: 0.5.3
+  - apiVersion: v2
     appVersion: 0.4.6
     created: "2024-08-24T03:30:43.989477136Z"
     dependencies:
@@ -86,4 +101,4 @@ entries:
     urls:
     - https://github.com/thelande/7dtd/releases/download/7dtd-0.1.0/7dtd-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-24T03:30:43.989508694Z"
+generated: "2024-08-24T17:00:07.239942492Z"
