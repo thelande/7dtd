@@ -36,6 +36,7 @@ sdtd:
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
+    labels: {}
     hosts:
       - host: chart-example.local
         paths:
@@ -49,6 +50,10 @@ sdtd:
   ## HTTPRoute for the admin web dashboard
   route:
     enabled: false
+    annotations: {}
+    labels: {}
+    hostnames: []
+    parentRefs: []
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious

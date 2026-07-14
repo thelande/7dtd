@@ -507,13 +507,36 @@ persistence:
   tmp:
     type: emptyDir
 
+{{/* Only configure ingress or route if the dashboard is enabled */}}
+{{- if index .Values "sdtd" "serverConfig" "admin" "webDashboardEnabled" }}
 ingress:
   main:
-    enabled: false
+    enabled: {{ index .Values "sdtd" "ingress" "enabled" }}
+    annotations: {{ index .Values "sdtd" "ingress" "annotations" }}
+    labels: {{ index .Values "sdtd" "ingress" "labels" }}
+    className: {{ index .Values "sdtd" "ingress" "className" }}
+    hosts:
+      - host: {{ index .Values "sdtd" "ingress" "hostname" }}
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: game
+              port: dashboard
+    tls: {{ index .Values "sdtd" "ingress" "tls" }}
 
 route:
   main:
-    enabled: false
+    enabled: {{ index .Values "sdtd" "route" "enabled" }}
+    annotations: {{ index .Values "sdtd" "route" "annotations" | toYaml | nindent 6 }}
+    labels: {{ index .Values "sdtd" "route" "labels" | toYaml | nindent 6 }}
+    hostnames: {{ index .Values "sdtd" "route" "hostnames" | toYaml | nindent 6 }}
+    parentRefs: {{ index .Values "sdtd" "route" "parentRefs" | toYaml | nindent 6 }}
+    rules:
+      - backendRefs:
+          - identifier: game
+            port: dashboard
+{{- end }}
 
 {{- end -}}
 {{- $_ := mergeOverwrite .Values (include "sdtd.hardcodedValues" . | fromYaml) -}}
