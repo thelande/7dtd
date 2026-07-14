@@ -4,7 +4,7 @@
 #
 set -e
 
-CONFIG_FILE="/app/7-days-to-die/serverconfig.xml"
+CONFIG_FILE="$INSTALL_DIR/serverconfig.xml"
 TMP_BACKUP_DIR=""
 
 function logit {
@@ -63,11 +63,6 @@ SDTD_BACKUP_FREQ="${SDTD_BACKUP_FREQ:-30}"
 [[ "$SDTD_BACKUP_FREQ" -gt 0 ]] || { error "SDTD_BACKUP_FREQ must be positive"; }
 SDTD_MAX_BACKUPS="${SDTD_MAX_BACKUPS:-48}"
 [[ "$SDTD_MAX_BACKUPS" -gt 0 ]] || { error "SDTD_MAX_BACKUPS must be positive"; }
-
-echo "Setting timezone to $TIMEZONE"
-[[ -f /etc/localtime ]] && rm /etc/localtime
-ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
-echo "$TIMEZONE" > /etc/timezone
 
 info "SDTD_BACKUP_PATH=$SDTD_BACKUP_PATH"
 info "SDTD_BACKUP_FREQ=$SDTD_BACKUP_FREQ"
