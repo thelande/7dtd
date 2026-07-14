@@ -24,7 +24,6 @@ version: 0.5.3
 appVersion: "0.4.7"
 
 dependencies:
-  - name: sdtd-exporter
-    repository: https://thelande.github.io/charts
-    version: '0.1.0'
-    condition: 'sdtd-exporter.enabled'
+  - name: common
+    version: 5.0.1
+    repository: https://bjw-s-labs.github.io/helm-charts/
