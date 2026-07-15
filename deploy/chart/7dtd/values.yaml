@@ -4,6 +4,25 @@ sdtd:
     pullPolicy: Always
     tag: rolling
 
+  podSecurityContext:
+    fsGroupChangePolicy: OnRootMismatch
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+    runAsNonRoot: true
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    seccompProfile:
+      type: RuntimeDefault
+
   persistence:
     # -- Configuration for the game data file PVC storage.
     data:

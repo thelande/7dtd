@@ -354,29 +354,14 @@ configMaps:
         exit 0
 
 defaultPodOptions:
-  securityContext:
-    fsGroup: &gid 1000
-    fsGroupChangePolicy: OnRootMismatch
-    runAsGroup: *gid
-    runAsUser: &uid 1000
-    runAsNonRoot: true
+  securityContext: {{ index .Values "sdtd" "podSecurityContext" | toYaml | nindent 4 }}
 
 controllers:
   main:
     type: deployment
 
     defaultContainerOptions:
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        #readOnlyRootFilesystem: true
-        runAsGroup: *gid
-        runAsNonRoot: true
-        runAsUser: *uid
-        seccompProfile:
-          type: RuntimeDefault
+      securityContext: {{ index .Values "sdtd" "containerSecurityContext" | toYaml | nindent 8 }}
 
     initContainers:
       init-config:
@@ -467,17 +452,7 @@ controllers:
   {{- if index .Values "sdtd-exporter" "enabled" }}
   exporter:
     defaultContainerOptions:
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsGroup: *gid
-        runAsNonRoot: true
-        runAsUser: *uid
-        seccompProfile:
-          type: RuntimeDefault
+      securityContext: {{ index .Values "sdtd" "containerSecurityContext" | toYaml | nindent 8 }}
 
     type: deployment
     containers:
