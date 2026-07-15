@@ -28,6 +28,10 @@ icon: https://static.wikia.nocookie.net/7daystodie_gamepedia/images/e/e6/Site-lo
 sources:
   - https://github.com/thelande/7dtd
 
+maintainers:
+  - name: Tom Helander
+    email: thomas.helander@gmail.com
+
 dependencies:
   - name: common
     version: 5.0.1

@@ -4,6 +4,16 @@
 
 A Helm chart to deploy the 7 Days to Die Dedicated Server
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Tom Helander | <thomas.helander@gmail.com> |  |
+
+## Source Code
+
+* <https://github.com/thelande/7dtd>
+
 ## Requirements
 
 | Repository | Name | Version |
