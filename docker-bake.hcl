@@ -3,6 +3,10 @@ APP = "7dtd"
 SOURCE = "https://github.com/thelande/7dtd"
 variable "GIT_SHA" {}
 
+variable "VERSION" {
+  default = "0.6.0"
+}
+
 group "default" {
     targets = ["image-local"]
 }
@@ -17,6 +21,7 @@ target "image" {
         "org.opencontainers.image.revision" = "${GIT_SHA}"
         "org.opencontainers.image.title" = "${APP}"
         "org.opencontainers.image.url" = "${SOURCE}"
+        "org.opencontainers.image.version" = "${VERSION}"
     }
     no-cache = true
 }
