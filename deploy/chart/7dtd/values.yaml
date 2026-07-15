@@ -421,6 +421,8 @@ sdtd:
         ## by starting the new game screen, clicking on the sandbox options button,
         ## adjusting the options, and then using the copy code button to paste it here.
         ## Code example: AAAJABJACJADJARFBNC
+        ##
+        ## See https://7d2d.net/7-days-to-die-sandbox-code-generator for a code generator.
         sandboxCode: AAAJABJACJADJARFBNC
 
 sdtd-exporter:
