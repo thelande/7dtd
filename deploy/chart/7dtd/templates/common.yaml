@@ -461,6 +461,69 @@ controllers:
         resources: {{ . | toYaml | nindent 10 }}
         {{- end }}
 
+  {{- if index .Values "sdtd-exporter" "enabled" }}
+  exporter:
+    defaultContainerOptions:
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: *gid
+        runAsNonRoot: true
+        runAsUser: *uid
+        seccompProfile:
+          type: RuntimeDefault
+
+    type: deployment
+    containers:
+      main:
+        image:
+          repository: {{ index .Values "sdtd-exporter" "image" "repository" }}
+          tag: {{ index .Values "sdtd-exporter" "image" "tag" }}
+          pullPolicy: {{ index .Values "sdtd-exporter" "image" "pullPolicy" }}
+
+        {{ $authSecret := required "sdtd-exporter.authSecret is required" (index .Values "sdtd-exporter" "authSecret") }}
+        env:
+          - name: SDTD_API_URL
+            value: {{ required "sdtd-exporter.apiUrl is required" (index .Values "sdtd-exporter" "apiUrl") | quote }}
+          - name: SDTD_TOKEN_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ $authSecret | quote }}
+                key: name
+          - name: SDTD_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ $authSecret | quote }}
+                key: token
+
+        probes:
+          liveness: &exporterProbes
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /metrics
+                port: &exporterPort 9816
+              initialDelaySeconds: 10
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 3
+          readiness: *exporterProbes
+  {{- end }}
+
+{{- if and (index .Values "sdtd-exporter" "enabled") (index .Values "sdtd-exporter" "serviceMonitor" "enabled") }}
+serviceMonitor:
+  exporter:
+    service:
+      identifier: exporter
+    endpoints:
+      - port: metrics
+        interval: {{ index .Values "sdtd-exporter" "serviceMonitor" "scrapeInterval" }}
+{{- end }}
+
 service:
   game:
     controller: main
@@ -476,6 +539,14 @@ service:
         port: &dashboardPort 8080
       telnet:
         port: &telnetPort 8081
+
+  {{- if index .Values "sdtd-exporter" "enabled" }}
+  exporter:
+    controller: exporter
+    ports:
+      metrics:
+        port: *exporterPort
+  {{- end }}
 
 persistence:
   scripts:
