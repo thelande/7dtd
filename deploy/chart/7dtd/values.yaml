@@ -5,9 +5,8 @@
 sdtd:
   image:
     repository: thelande/7dtd
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    pullPolicy: Always
+    tag: rolling
 
   persistence:
     data:
