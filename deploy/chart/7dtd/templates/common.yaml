@@ -336,6 +336,9 @@ configMaps:
             <permission cmd="signeditordebug" permission_level="1000" />
             <permission cmd="signtexman" permission_level="1000" />
             <permission cmd="uioptions" permission_level="1000" />
+            {{- range .commands }}
+            <permission cmd="{{ .cmd }}" permission_level="{{ .permissionLevel }}" />
+            {{- end }}
             </commands>
             <apitokens>
             <!-- <token name="adminuser1" secret="supersecrettoken" permission_level="0" /> -->
