@@ -1,6 +1,6 @@
 # 7dtd
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
+![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
 
 A Helm chart to deploy the 7 Days to Die Dedicated Server
 
@@ -34,12 +34,24 @@ A Helm chart to deploy the 7 Days to Die Dedicated Server
 | sdtd-exporter.serviceMonitor.scrapeInterval | string | `"60s"` | Scrape interval of the service monitor. |
 | sdtd.allocsFixes.enabled | bool | `false` | Deploy Alloc's Fixes when `true`. |
 | sdtd.allocsFixes.overrideVersion | string | `""` | Override the version to be installed. See https://illy.bz/fi/7dtd/ for a list of available versions. This field should be the `vXX_YY_ZZ` portion of the filename (example: `v30_38_52`). An empty value means to use the latest from https://illy.bz/fi/7dtd/server_fixes.tar.gz |
+| sdtd.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| sdtd.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| sdtd.containerSecurityContext.readOnlyRootFilesystem | bool | `false` |  |
+| sdtd.containerSecurityContext.runAsGroup | int | `1000` |  |
+| sdtd.containerSecurityContext.runAsNonRoot | bool | `true` |  |
+| sdtd.containerSecurityContext.runAsUser | int | `1000` |  |
+| sdtd.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | sdtd.image.pullPolicy | string | `"Always"` |  |
 | sdtd.image.repository | string | `"thelande/7dtd"` |  |
 | sdtd.image.tag | string | `"rolling"` |  |
 | sdtd.ingress | object | `{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}],"labels":{},"tls":[]}` | Ingress for the admin web dashboard |
 | sdtd.persistence.data | object | `{"accessMode":"ReadWriteOnce","existingClaim":"","size":"20Gi","storageClass":""}` | Configuration for the game data file PVC storage. |
 | sdtd.persistence.steam | object | `{"accessMode":"ReadWriteOnce","existingClaim":"","size":"500Mi","storageClass":""}` | Configuration for the steam client file PVC storage. |
+| sdtd.podSecurityContext.fsGroup | int | `1000` |  |
+| sdtd.podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
+| sdtd.podSecurityContext.runAsGroup | int | `1000` |  |
+| sdtd.podSecurityContext.runAsNonRoot | bool | `true` |  |
+| sdtd.podSecurityContext.runAsUser | int | `1000` |  |
 | sdtd.probes.enabled | bool | `false` |  |
 | sdtd.resources | object | `{}` |  |
 | sdtd.route | object | `{"annotations":{},"enabled":false,"hostnames":[],"labels":{},"parentRefs":[]}` | HTTPRoute for the admin web dashboard |

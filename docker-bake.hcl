@@ -4,7 +4,7 @@ SOURCE = "https://github.com/thelande/7dtd"
 variable "GIT_SHA" {}
 
 variable "VERSION" {
-  default = "0.6.0"
+  default = "0.6.1"
 }
 
 group "default" {
