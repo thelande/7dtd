@@ -411,6 +411,27 @@ controllers:
         resources: {{ . | toYaml | nindent 10 }}
         {{- end }}
 
+      {{- if index .Values "sdtd" "allocsFixes" "enabled" }}
+      {{ $overrideVer := (index .Values "sdtd" "allocsFixes" "overrideVersion") }}
+      {{ $downloadFile := (empty $overrideVer) | ternary "server_fixes.tar.gz" (printf "server_fixes_%s.tar.gz" $overrideVer) }}
+      install-allocs:
+        image:
+          repository: busybox
+          tag: latest
+          pullPolicy: Always
+        command:
+          - sh
+          - -c
+          - |
+            URL="https://illy.bz/fi/7dtd/{{ $downloadFile }}"
+            echo "Downloading $URL ..."
+            wget "$URL" -O /tmp/{{ $downloadFile }}
+            tar zxf /tmp/{{ $downloadFile }} -C /data
+
+        dependsOn:
+          - install-server
+      {{- end }}
+
     containers:
       main:
         image: *image
@@ -477,8 +498,15 @@ persistence:
     {{- else }}
     existingClaim: {{ index .Values "sdtd" "persistence" "data" "existingClaim" }}
     {{- end }}
-    globalMounts:
-      - path: /data
+    advancedMounts:
+      main:
+        install-server: &dataPath
+          - path: /data
+        init-config: *dataPath
+        main: *dataPath
+        {{- if index .Values "sdtd" "allocsFixes" "enabled" }}
+        install-allocs: *dataPath
+        {{- end }}
 
   steam:
     {{- if not (index .Values "sdtd" "persistence" "steam" "existingClaim") }}
@@ -490,8 +518,11 @@ persistence:
     {{- else }}
     existingClaim: {{ index .Values "sdtd" "persistence" "steam" "existingClaim" }}
     {{- end }}
-    globalMounts:
-      - path: /home/steam
+    advancedMounts:
+      main:
+        install-server: &steamPath
+          - path: /home/steam
+        main: *steamPath
 
   tmp:
     type: emptyDir
