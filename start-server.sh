@@ -15,8 +15,9 @@ tail -f "$LOGFILE" | grep -v Shader &
 
 ./7DaysToDieServer.x86_64 \
     -logfile "$LOGFILE" \
-    -configfile=serverconfig.xml \
     -quit \
     -batchmode \
     -nographics \
+    -configfile=serverconfig.xml \
+    "$@" \
     -dedicated

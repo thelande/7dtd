@@ -1,0 +1,47 @@
+services:
+  init-perms:
+    image: busybox
+    command:
+      - "sh"
+      - "-c"
+      - "mkdir -p /data /home/steam && chown -R 1000:1000 /data /home/steam"
+    volumes: &volumes
+      - game-data:/data
+      - steam:/home/steam
+
+  init-game-files:
+    image: &image 7dtd:2026.07.14
+    user: &user 1000:1000
+    command: ["/install-game.sh"]
+    volumes: *volumes
+    # environment:
+    #   - DO_VALIDATE=1
+    depends_on:
+      init-perms:
+        condition: service_completed_successfully
+
+  sdtd:
+    image: *image
+    container_name: 7-days-to-die
+    user: *user
+    volumes: *volumes
+    restart: unless-stopped
+    ports:
+      - "26900:26900"
+      - "26900-26904:26900-26904/udp"
+      - "8080:8080" # dashboard
+      # - "8081:8081" # telnet
+    command: ["/start-server.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "[ -z $(timeout 1 bash -c ': > /dev/tcp/localhost/26900') ]"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+    depends_on:
+      init-game-files:
+        condition: service_completed_successfully
+
+volumes:
+  game-data: {}
+  steam: {}

@@ -1,16 +1,11 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Release
+name: CI
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-
-  workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   build:
@@ -29,10 +24,10 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v4
 
-    - name: Build and push image
+    - name: Build image
       uses: docker/bake-action@v7
       with:
-        push: true
+        push: false
         files: ./docker-bake.hcl
         targets: image-all
       env:
