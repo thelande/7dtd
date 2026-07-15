@@ -415,18 +415,21 @@ controllers:
       main:
         image: *image
         command: ["/start-server.sh"]
-        liveness: &probes
-          enabled: {{ index .Values "sdtd" "probes" "enabled" }}
-          port: &gamePort 26900
-        readiness: *probes
-        startup:
-          enabled: {{ index .Values "sdtd" "probes" "enabled" }}
-          custom: true
-          spec:
-            tcpSocket:
-              port: *gamePort
-            failureThreshold: {{ div (index .Values "sdtd" "probes" "startupDelaySeconds") 10 }}
-            periodSeconds: 10
+        probes:
+          liveness: &probes
+            enabled: {{ index .Values "sdtd" "probes" "enabled" }}
+            port: &gamePort 26900
+          readiness: *probes
+          startup:
+            enabled: {{ index .Values "sdtd" "probes" "enabled" }}
+            custom: true
+            spec:
+              tcpSocket:
+                port: *gamePort
+              failureThreshold: 3
+              timeoutSeconds: 5
+              periodSeconds: 10
+              initialDelaySeconds: 180
 
         lifecycle:
           preStop:
