@@ -61,16 +61,7 @@ The project includes several scripts for manual intervention:
 
 ## Advanced Deployment: Kubernetes / Helm
 
-For users looking to deploy on a cluster, navigate to the `deploy` directory:
-
-```bash
-cd deploy/chart/7dtd
-# Use helm install or upgrade commands here
-```
-
-You can find configuration values in `values.yaml`. Reference this section if you are managing production infrastructure at scale.
-
-See the helm chart [README](deploy/chart/7dtd/README.md) for available options.
+For users looking to deploy on a cluster, see the [7dtd](https://github.com/thelande/charts/tree/main/charts/7dtd) chart.
 
 ## License
 Refer to the [LICENSE](./LICENSE) file for more details on usage rights.
