@@ -437,19 +437,6 @@ controllers:
         resources: {{ . | toYaml | nindent 10 }}
         {{- end }}
 
-      {{- if index .Values "sdtd" "backups" "enabled" }}
-      backups:
-        image: *image
-        command: ["/backup-saves.sh"]
-        env:
-          - name: SDTD_BACKUP_PATH
-            value: /backups
-          - name: SDTD_BACKUP_FREQ
-            value: {{ index .Values "sdtd" "backups" "frequency" | quote }}
-          - name: SDTD_BACKUP_MAX_BACKUPS
-            value: {{ index .Values "sdtd" "backups" "maxBackups" | quote }}
-      {{- end }}
-
 service:
   game:
     controller: main
@@ -502,20 +489,6 @@ persistence:
     {{- end }}
     globalMounts:
       - path: /home/steam
-
-  {{- if index .Values "sdtd" "backups" "enabled" }}
-  backups:
-    enabled: true
-    {{- if not (index .Values "sdtd" "persistence" "backups" "existingClaim") }}
-    type: persistentVolumeClaim
-    accessMode: {{ index .Values "sdtd" "persistence" "backups" "accessMode" }}
-    size: {{ index .Values "sdtd" "persistence" "backups" "size" }}
-    storageClass: {{ index .Values "sdtd" "persistence" "backups" "storageClass" }}
-    retain: true
-    {{- else }}
-    existingClaim: {{ index .Values "sdtd" "persistence" "backups" "existingClaim" }}
-    {{- end }}
-  {{- end }}
 
   tmp:
     type: emptyDir
