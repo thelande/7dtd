@@ -45,7 +45,10 @@ sdtd:
     annotations: {}
     labels: {}
     hostnames: []
+    #  - sdtd-dashboard.local
     parentRefs: []
+    #  - name: envoy-internal
+    #    namespace: network
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
