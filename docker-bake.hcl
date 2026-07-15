@@ -39,7 +39,8 @@ target "image-all" {
     ]
     tags = [
         "docker.io/thelande/${APP}:rolling",
-        # "docker.io/thelande/${APP}:sha-${GIT_SHA}"
+        "docker.io/thelande/${APP}:sha-${GIT_SHA}",
+        "docker.io/thelande/${APP}:${VERSION}"
     ]
 }
 
